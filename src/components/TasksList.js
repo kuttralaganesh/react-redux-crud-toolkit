@@ -1,19 +1,32 @@
-import React,{useState} from "react";
+import React, { useState } from "react";
 import { Button } from "react-bootstrap";
 import Table from "react-bootstrap/Table";
+import { useDispatch, useSelector } from "react-redux";
 import MyVerticallyCenteredModal from './UpdateTask';
+import { setSelectedTask,deleteTask, removeFromList} from "../features/counter/tasksSlice";
 
 const TasksList = () => {
-  const updateTask = () => {
-    console.log("update Task");
+
+  const dispatch=useDispatch()
+  
+  const [modalShow, setModalShow] = useState(false)
+  const { tasksList } = useSelector((state) => state.tasks);
+
+  const updateTask = (task) => {
     setModalShow(true)
+    dispatch(setSelectedTask(task))
   };
 
-  const deleteTask = () => {
+  const deleteTask = (task) => {
     console.log("delete task");
+    dispatch(removeFromList(task))
   };
 
-  const [modalShow,setModalShow] = useState(false)
+ 
+
+
+
+
   return (
     <>
       <Table striped bordered hover>
@@ -26,23 +39,33 @@ const TasksList = () => {
           </tr>
         </thead>
         <tbody>
-          <tr className="text-center">
-            <td>1</td>
-            <td>Mark</td>
-            <td>Otto</td>
-            <td>
-              <Button
-                variant="primary"
-                className="mx-3"
-                onClick={() => updateTask()}
-              >
-                <i className="bi bi-pencil-square"></i>
-              </Button>
-              <Button variant="primary">
-                <i className="bi bi-trash3" onClick={() => deleteTask()}></i>
-              </Button>
-            </td>
-          </tr>
+          {
+            tasksList ? tasksList.map((task, index) => {
+              return (
+
+                <tr className="text-center" key={task.id}>
+                  <td>{index + 1}</td>
+                  <td>{task.title}</td>
+                  <td>{task.description}</td>
+                  <td>
+                    <Button
+                      variant="primary"
+                      className="mx-3"
+                      onClick={() => updateTask(task)}
+                    >
+                      <i className="bi bi-pencil-square"></i>
+                    </Button>
+                    <Button variant="primary">
+                      <i className="bi bi-trash3" onClick={() => deleteTask(task)}></i>
+                    </Button>
+                  </td>
+                </tr>
+              )
+            }) : null
+          }
+
+
+
         </tbody>
       </Table>
 
