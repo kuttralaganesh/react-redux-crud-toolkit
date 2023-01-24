@@ -16,7 +16,7 @@ const AddTask = () => {
   
     const addTask = (e) => {
         e.preventDefault()
-        console.log({title,description})
+        const isEmpty = Object.values({title,description}).every(x => x === null || x === '');
         dispatch(addTaskToList({title,description}))
         setDescription('');
         setTitle('');
